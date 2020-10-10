@@ -126,11 +126,13 @@ def readFile(name):
         print("Error leyendo el archivo, nombre incorrecto")
 
 def showPlot(x,y,title_str,ylabel_str):
+    pyplot.ion()
     pyplot.plot(x,y)
     pyplot.title(title_str)
     pyplot.ylabel(ylabel_str)
     pyplot.xticks(dates,rotation='vertical')
     pyplot.margins(0.2)
+    pyplot.show()
 
 def perDayCases(row):
     global data
@@ -177,6 +179,7 @@ def dailyPercentage(row):
              "Porcentaje de aumento respecto al acumulado del dia anterior")
 
 def showPieChart(percentage,labels,title_str):
+    pyplot.ion()
     pyplot.pie(percentage,labels=labels,autopct='%1.1f%%')
     pyplot.title(title_str)
     pyplot.show()
@@ -195,7 +198,7 @@ def stateCasesPieChart():
         cases.append(stateCases)
         totalCases+=stateCases
     percentage=[]
-    for i in range(1,len(cases)):
+    for i in range(0,len(cases)):
         percentage.append(cases[i]/totalCases*100)
     showPieChart(percentage, labels, 
                  "Porcentaje por estado respecto al total de casos en el pais")
@@ -230,19 +233,19 @@ def nationalData():
     elif(op=='3'):
         dailyPercentage(id_data)
     elif(op=='4'):
-        stateCasesPieChart(id_data)
+        stateCasesPieChart()
     elif(op=='5'):
         healthy_vs_infected_people(id_data)
     elif(op=='6'):
         Escape=True
     else:
         print("Operacion no reconocida")
-    #print("Presione una tecla para continuar...")
-    #input()
-    #if(not Escape):
-    #    nationalData()
+    print("Presione una tecla para continuar...")
+    input()
+    if(not Escape):
+        nationalData()
 
-def stateData(id_data,name):
+def stateData(id_data):
     global data
     print(f"DATOS POR ESTADO: {data[id_data][2]}\n")
     print("1. Mostrar casos por dia")
@@ -299,22 +302,18 @@ def main():
     print("4. Salir")
     os.system("pause")
     op=input()
-    #Escape=False
+    Escape=False
     if(op=='1'):
         print("Por favor ingrese el nombre del archivo con datos")
         name=input()
         readFile(name)
         print("Presione una tecla para continuar...")
         input()
-        main()
     elif(op=='2'):
-        #nationalData()
-        perDayCases(33)
-        print("Presione una tecla para continuar...")
-        input()
+        nationalData()
     elif(op=='3'):
-        #id_data=selectState()
-        #stateData(id_data)
+        id_data=selectState()
+        stateData(id_data)
         pass
     elif(op=='4'):
         Escape=True
@@ -322,7 +321,7 @@ def main():
         print("Operacion no reconocida")
         print("Presione una tecla para continuar...")
         input()
-    #if(not Escape):
-    #    main()
+    if(not Escape):
+        main()
     
 main()
