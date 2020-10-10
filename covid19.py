@@ -126,6 +126,27 @@ def readFile(name):
         print("Error leyendo el archivo, nombre incorrecto")
 
 def showPlot(x,y,title_str,ylabel_str):
+    """
+    showPlot recibe listas con valores de los ejes x,y ,
+    una cadena de titulo y una cadena del nombre del eje y,
+    muestra en pantalla la grafica con estos datos.
+
+    Parameters
+    ----------
+    x : list
+        Datos del eje x.
+    y : list
+        Datos del eje y.
+    title_str : str
+        Titulo del grafico.
+    ylabel_str : str
+        Nombre del eje y.
+
+    Returns
+    -------
+    None.
+
+    """
     pyplot.ion()
     pyplot.plot(x,y)
     pyplot.title(title_str)
@@ -135,6 +156,20 @@ def showPlot(x,y,title_str,ylabel_str):
     pyplot.show()
 
 def perDayCases(row):
+    """
+    perDayCases recibe un indice de fila y grafica los casos diarios
+    segun el indice.
+
+    Parameters
+    ----------
+    row : int
+        Indice de la fila en la que se encuentran los datos a graficar.
+
+    Returns
+    -------
+    None.
+
+    """
     global data
     global dates
     cases=[]
@@ -143,6 +178,20 @@ def perDayCases(row):
     showPlot(dates,cases,f"Datos de {data[row][2]}","Casos diarios")
 
 def cumulativeCases(row):
+    """
+    cumulativeCases recibe un indice de fila, calcula los casos acumulados
+    en ese indice y los grafica.
+
+    Parameters
+    ----------
+    row : int
+        Indice de la fila en la que se encuentran los datos a graficar.
+
+    Returns
+    -------
+    None.
+
+    """
     global data
     global dates
     cases=[]
@@ -154,6 +203,20 @@ def cumulativeCases(row):
     showPlot(dates,cases,f"Datos de {data[row][2]}","Casos acumulados")
 
 def dailyPercentage(row):
+    """
+    dailyPercentage recibe un indice de fila, calcula el porcentaje
+    de aumento respecto al dia anterior segun ese indice, y los grafica.
+
+    Parameters
+    ----------
+    row : int
+        Indice de la fila en la que se encuentran los datos a graficar.
+
+    Returns
+    -------
+    None.
+
+    """
     global data
     global dates
     cases=[]
@@ -179,12 +242,39 @@ def dailyPercentage(row):
              "Porcentaje de aumento respecto al acumulado del dia anterior")
 
 def showPieChart(percentage,labels,title_str):
+    """
+    ShowPieChart recibe una lista con porcentajes, otra con etiquetas
+    y una cadena de titulo, y crea una grafica de pastel con los datos.
+
+    Parameters
+    ----------
+    percentage : list
+        Porcentaje correspondiente a cada clase.
+    labels : list
+        Nombre que se le va a dar a cada clase.
+    title_str : str
+        Cadena con el titulo del grafico.
+
+    Returns
+    -------
+    None.
+
+    """
     pyplot.ion()
     pyplot.pie(percentage,labels=labels,autopct='%1.1f%%')
     pyplot.title(title_str)
     pyplot.show()
 
 def stateCasesPieChart():
+    """
+    stateCasesPieChart calcula el porcentaje de casos respecto al total
+    para cada estado y crea una grafica de pastel.
+
+    Returns
+    -------
+    None.
+
+    """
     global data
     labels=[]
     cases=[]
@@ -204,6 +294,21 @@ def stateCasesPieChart():
                  "Porcentaje por estado respecto al total de casos en el pais")
 
 def healthy_vs_infected_people(row):
+    """
+    healthy_vs_infected_people recibe un indice de fila y calcula
+    la cantidad total de infectados y no infectados en esa fila,
+    despues lo muestra en grafica de pastel.
+
+    Parameters
+    ----------
+    row : int
+        Indice de la fila en la que se encuentran los datos a graficar.
+
+    Returns
+    -------
+    None.
+
+    """
     global data
     population=data[row][1]
     infected=0
@@ -216,6 +321,15 @@ def healthy_vs_infected_people(row):
                  f"Porcentaje de personas infectadas y no infectadas en {data[row][2]}")
 
 def nationalData():
+    """
+    nationalData es la interfaz de usuario que permite navegar por las
+    opciones de datos nacionales.
+
+    Returns
+    -------
+    None.
+
+    """
     id_data=33
     print("DATOS NACIONALES\n")
     print("1. Mostrar casos por dia")
@@ -246,6 +360,20 @@ def nationalData():
         nationalData()
 
 def stateData(id_data):
+    """
+    stateData es la interfaz de usuario que permite navegar por las opciones
+    del estado con indice de fila id_data.
+
+    Parameters
+    ----------
+    id_data : int
+        Indice de la fila de los datos de ese estado.
+
+    Returns
+    -------
+    None.
+
+    """
     global data
     print(f"DATOS POR ESTADO: {data[id_data][2]}\n")
     print("1. Mostrar casos por dia")
@@ -273,6 +401,16 @@ def stateData(id_data):
         stateData(id_data)
 
 def selectState():
+    """
+    selectState es la interfaz de usuario que permite seleccionar un estado
+    para ver sus datos correspondientes.
+
+    Returns
+    -------
+    id_data : int
+        Indice de la fila del estado seleccionado.
+
+    """
     global data
     print("DATOS POR ESTADO\n")
     print("Por favor seleccione el estado para el cual desea consultar datos")
@@ -293,6 +431,15 @@ def selectState():
     return id_data
 
 def main():
+    """
+    main() es la interfaz de usuario principal que comunica al usuario con
+    las funciones de este sistema.
+
+    Returns
+    -------
+    None.
+
+    """
     os.system("cls")
     print("BIENVENIDO AL SISTEMA DE CONSULTA DE DATOS DE COVID-19 EN MEXICO\n")
     print("POR FAVOR SELECCIONE UNA OPCION\n")
