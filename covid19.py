@@ -1,12 +1,12 @@
 # David Damian Galan
 # A01752785
-import os
 import matplotlib.pyplot as pyplot
 %matplotlib inline
-data = []  # En esta matriz se guardan los datos del archivo .csv
-dates = []
+DATA = []  # En esta matriz se guardan los datos del archivo .csv
+DATES = []
 # En esta lista se guardan las cadenas con las fechas del archivo .csv
 """
+Algoritmo split_elements()
 Recibir la cadena inicial
 Inicializar elements como lista vacia
 Inicializar act_var como lista vacia
@@ -61,33 +61,34 @@ def split_elements(init_str):
 
 
 """
+Algoritmo read_file()
 Recibir name
-Inicializar data como una lista vacia global
-Inicializar dates como una lista vacia global
+Inicializar DATA como una lista vacia global
+Inicializar DATES como una lista vacia global
 Si ya se habia cargado el archivo
     Imprimir que el archivo ya se ha leido anteriormente
     Retornar la funcion
 Intentar:
     Abrir el archivo y guardarlo en el objeto file
     Declarar tmp_str e inicializarlo con la primera linea del archivo
-    Llamar a split_elements y guardar la lista que regresa en dates
-    Eliminar el primer elemento en dates (informacion inservible)
-    Eliminar el primer elemento en dates
-    Eliminar el primer elemento en dates
+    Llamar a split_elements y guardar la lista que regresa en DATES
+    Eliminar el primer elemento en DATES (informacion inservible)
+    Eliminar el primer elemento en DATES
+    Eliminar el primer elemento en DATES
     Mientras tmp_str no este vacia
-        Llamar a split_elements y agregar la lista que regresa a data
+        Agregar la lista que regresa split_elements(tmp_str), a DATA
         Leer la siguiente linea del archivo y guardarla en tmp_str
     Cerrar el archivo
     Imprimir lectura exitosa
-    Para cada i en el rango [1,cantidad de filas de data)
-        Para cada j en el rango[3,cantidad de columnas de data)
-            Convertir data[i][j] a int
-        Convertir data[i][1] a int
+    Para cada i en el rango [1,cantidad de filas de DATA)
+        Para cada j en el rango[3,cantidad de columnas de DATA)
+            Convertir DATA[i][j] a entero
+        Convertir DATA[i][1] a entero
     Marcar que ya se ha leido el archivo
 Excepcion de error de lectura:
     Imprimir error al leer el archivo, nombre incorrecto
 """
-__file_loaded = False
+FILE_LOADED = False
 # Determina si ya se leyo el archivo con datos (True) o no (False)
 
 
@@ -106,31 +107,31 @@ def read_file(name):
     None.
 
     """
-    global __file_loaded
-    if(__file_loaded):
+    global FILE_LOADED
+    if(FILE_LOADED):
         print("Ya se ha leido el archivo anteriormente")
         return
-    global data
-    global dates
-    data = []
-    dates = []
+    global DATA
+    global DATES
+    DATA = []
+    DATES = []
     try:
         file = open(name)
         tmp_str = file.readline()
-        dates = split_elements(tmp_str)
-        dates.pop(0)
-        dates.pop(0)
-        dates.pop(0)
+        DATES = split_elements(tmp_str)
+        DATES.pop(0)
+        DATES.pop(0)
+        DATES.pop(0)
         while(tmp_str != ""):
-            data.append(split_elements(tmp_str))
+            DATA.append(split_elements(tmp_str))
             tmp_str = file.readline()
         file.close()
-        for i in range(1, len(data)):
-            for j in range(3, len(data[i])):
-                data[i][j] = int(data[i][j])
-            data[i][1] = int(data[i][1])
+        for i in range(1, len(DATA)):
+            for j in range(3, len(DATA[i])):
+                DATA[i][j] = int(DATA[i][j])
+            DATA[i][1] = int(DATA[i][1])
         print("Lectura exitosa")
-        __file_loaded = True
+        FILE_LOADED = True
     except IOError:
         print("Error leyendo el archivo, nombre incorrecto")
 
@@ -157,11 +158,16 @@ def show_plot(x, y, title_str, ylabel_str):
     None.
 
     """
+    dates_white = x[:]
+    for i in range(len(dates_white)):
+        if(i % 10 != 0):
+            dates_white[i] = " "
     pyplot.ion()
     pyplot.plot(x, y)
     pyplot.title(title_str)
     pyplot.ylabel(ylabel_str)
-    pyplot.xticks(dates, rotation='vertical')
+    pyplot.ylim(bottom=0)
+    pyplot.xticks(dates_white, rotation='vertical')
     pyplot.margins(0.2)
     pyplot.show()
 
@@ -181,12 +187,12 @@ def per_day_cases(row):
     None.
 
     """
-    global data
-    global dates
+    global DATA
+    global DATES
     cases = []
-    for i in range(3, len(data[row])):
-        cases.append(data[row][i])
-    show_plot(dates, cases, f"Datos de {data[row][2]}", "Casos diarios")
+    for i in range(3, len(DATA[row])):
+        cases.append(DATA[row][i])
+    show_plot(DATES, cases, f"Datos de {DATA[row][2]}", "Casos diarios")
 
 
 def cumulative_cases(row):
@@ -204,15 +210,17 @@ def cumulative_cases(row):
     None.
 
     """
-    global data
-    global dates
+    global DATA
+    global DATES
     cases = []
-    for i in range(3, len(data[row])):
-        ith_day_cases = data[row][i]
+    for i in range(3, len(DATA[row])):
+        ith_day_cases = DATA[row][i]
         if(len(cases) > 0):
             ith_day_cases += cases[i - 4]
         cases.append(ith_day_cases)
-    show_plot(dates, cases, f"Datos de {data[row][2]}", "Casos acumulados")
+    total_cases = cases[-1]
+    show_plot(DATES, cases, f"Datos de {DATA[row][2]}, " +
+              f"total de {total_cases} casos", "Casos acumulados")
 
 
 def daily_percentage(row):
@@ -230,11 +238,11 @@ def daily_percentage(row):
     None.
 
     """
-    global data
-    global dates
+    global DATA
+    global DATES
     cases = []
-    for i in range(3, len(data[row])):
-        ith_day_cases = data[row][i]
+    for i in range(3, len(DATA[row])):
+        ith_day_cases = DATA[row][i]
         if(len(cases) > 0):
             ith_day_cases += cases[i - 4]
         cases.append(ith_day_cases)
@@ -251,7 +259,7 @@ def daily_percentage(row):
             else:
                 advance = cases[i] / cases[i - 1] * 100 - 100
             percentage.append(advance)
-    show_plot(dates, percentage, f"Datos de {data[row][2]}",
+    show_plot(DATES, percentage, f"Datos de {DATA[row][2]}",
               "Porcentaje de aumento respecto al acumulado del dia anterior")
 
 
@@ -290,21 +298,24 @@ def state_cases_pie_chart():
     None.
 
     """
-    global data
+    global DATA
     labels = []
     cases = []
-    for i in range(1, len(data) - 1):
-        labels.append(data[i][2])
+    for i in range(1, len(DATA) - 1):
+        labels.append(DATA[i][2])
     totalCases = 0
-    for i in range(1, len(data) - 1):
+    for i in range(1, len(DATA) - 1):
         stateCases = 0
-        for j in range(3, len(data[i])):
-            stateCases += data[i][j]
+        for j in range(3, len(DATA[i])):
+            stateCases += DATA[i][j]
         cases.append(stateCases)
         totalCases += stateCases
     percentage = []
     for i in range(0, len(cases)):
         percentage.append(cases[i] / totalCases * 100)
+    for i in range(len(percentage)):
+        if(percentage[i] < 2.6):
+            labels[i] = ""
     show_pie_chart(
         percentage,
         labels,
@@ -327,19 +338,52 @@ def healthy_vs_infected_people(row):
     None.
 
     """
-    global data
-    population = data[row][1]
+    global DATA
+    population = DATA[row][1]
     infected = 0
-    for i in range(3, len(data[row])):
-        infected += data[row][i]
+    for i in range(3, len(DATA[row])):
+        infected += DATA[row][i]
     healthy = population - infected
-    print(f"{data[row][2]} tiene una poblacion de {population}")
-    print(
-        f"""de los cuales {infected} estan infectados 
-        y {healthy} estan no infectados""")
-    show_pie_chart([healthy, infected], ["No infectados", "Infectados"],
-                   f"""Porcentaje de personas infectadas y 
-                   no infectadas en {data[row][2]}""")
+    print(f"{DATA[row][2]} tiene una poblacion de {population}")
+    print(f"de los cuales {infected} estan infectados " +
+          f"y {healthy} estan no infectados")
+    show_pie_chart([healthy, infected],
+                   [f"No infectados: {healthy}", f"Infectados: {infected}"],
+                   "Porcentaje de personas infectadas y " +
+                   "no infectadas en " + f"{DATA[row][2]}")
+
+
+"""
+Algoritmo national_data()
+Asignar el ID 33 a id_data
+Imprimir "DATOS NACIONALES"
+Imprimir "1. Mostrar casos por dia"
+Imprimir "2. Mostrar casos acumulados"
+Imprimir "3. Mostrar porcentaje de aumento diario"
+Imprimir "4. Mostrar porcentaje de cada estado respecto al total"
+Imprimir "5. Mostrar porcentaje de personas infectadas y no infectadas"
+Imprimir "6. Regresar"
+Leer op (operacion)
+Inicializar escape como falso
+Si op es 1
+    Llamar a per_day_cases(id_data)
+Sino, si op es 2
+    Llamar a cumulative_cases(id_data)
+Sino, si op es 3
+    Llamar a daily_percentage(id_data)
+Sino, si op es 4
+    Llamar a state_cases_pie_chart()
+Sino, si op es 5
+    Llamar a healthy_vs_infected_people(id_data)
+Sino, si op es 6
+    Asignar True al valor de escape
+Sino
+    Imprimir "Operacion no reconocida"
+Si escape es Falso
+    Imprimir "Presione una tecla para continuar"
+    Leer una cadena y no guardar en ningun lado
+    Hacer una llamada recursiva a national_data()
+"""
 
 
 def national_data():
@@ -361,7 +405,7 @@ def national_data():
     print("5. Mostrar porcentaje de personas infectadas y no infectadas")
     print("6. Regresar")
     op = input()
-    Escape = False
+    escape = False
     if(op == '1'):
         per_day_cases(id_data)
     elif(op == '2'):
@@ -373,13 +417,44 @@ def national_data():
     elif(op == '5'):
         healthy_vs_infected_people(id_data)
     elif(op == '6'):
-        Escape = True
+        escape = True
     else:
         print("Operacion no reconocida")
-    if(not Escape):
+    if(not escape):
         print("Presione una tecla para continuar...")
         input()
         national_data()
+
+
+"""
+Algoritmo state_data(id_data)
+Recibir id_data
+Obtener la variable global DATA
+Imprimir "DATOS POR ESTADO: 'nombre del estado' "
+Imprimir "1. Mostrar casos por dia"
+Imprimir "2. Mostrar casos acumulados"
+Imprimir "3. Mostrar porcentaje de aumento diario"
+Imprimir "4. Mostrar porcentaje de personas infectadas y no infectadas"
+Imprimir "5. Regresar"
+Leer op (operacion)
+Inicializar escape como falso
+Si op es 1
+    Llamar a per_day_cases(id_data)
+Sino, si op es 2
+    Llamar a cumulative_cases(id_data)
+Sino, si op es 3
+    Llamar a daily_percentage(id_data)
+Sino, si op es 4
+    Llamar a healthy_vs_infected_people(id_data)
+Sino, si op es 5
+    Asignar True al valor de escape
+Sino
+    Imprimir "Operacion no reconocida"
+Si escape es Falso
+    Imprimir "Presione una tecla para continuar"
+    Leer una cadena y no guardar en ningun lado
+    Hacer una llamada recursiva a state_data(id_data)
+"""
 
 
 def state_data(id_data):
@@ -397,15 +472,15 @@ def state_data(id_data):
     None.
 
     """
-    global data
-    print(f"DATOS POR ESTADO: {data[id_data][2]}\n")
+    global DATA
+    print(f"DATOS POR ESTADO: {DATA[id_data][2]}\n")
     print("1. Mostrar casos por dia")
     print("2. Mostrar casos acumulados")
     print("3. Mostrar porcentaje de aumento diario")
     print("4. Mostrar porcentaje de personas infectadas y no infectadas")
     print("5. Regresar")
     op = input()
-    Escape = False
+    escape = False
     if(op == '1'):
         per_day_cases(id_data)
     elif(op == '2'):
@@ -415,14 +490,36 @@ def state_data(id_data):
     elif(op == '4'):
         healthy_vs_infected_people(id_data)
     elif(op == '5'):
-        Escape = True
+        escape = True
     else:
         print("Operacion no reconocida")
-
-    if(not Escape):
+    if(not escape):
         print("Presione una tecla para continuar...")
         input()
         state_data(id_data)
+
+
+"""
+Algoritmo select_state()
+Obtener la variable global DATA
+Imprimir "DATOS POR ESTADO"
+Imprimir "Por favor seleccione el estado para el cual desea consultar datos"
+Para cada i en el rango [1,longitud de DATA-1)
+    Imprimir i + la informacion de DATA[i][2] (nombre del estado)
+Leer id_data
+Si id_data no es un numero
+    Imprimir "Operacion no reconocida"
+    Imprimir "Presione una tecla para continuar..."
+    Leer una cadena y no guardar en ningun lado
+    Hacer una llamada recursiva a select_state()
+Convertir id_data a entero
+Si id_data es menor a 1 o mayor a 32
+    Imprimir "Operacion no reconocida"
+    Imprimir "Presione una tecla para continuar..."
+    Leer una cadena y no guardar en ningun lado
+    Hacer una llamada recursiva a select_state()
+Regresar id_data
+"""
 
 
 def select_state():
@@ -436,11 +533,11 @@ def select_state():
         Indice de la fila del estado seleccionado.
 
     """
-    global data
+    global DATA
     print("DATOS POR ESTADO\n")
     print("Por favor seleccione el estado para el cual desea consultar datos")
-    for i in range(1, len(data) - 1):
-        print(f"{i}. {data[i][2]}")
+    for i in range(1, len(DATA) - 1):
+        print(f"{i}. {DATA[i][2]}")
     id_data = input()
     if(not id_data.isnumeric()):
         print("Operacion no reconocida")
@@ -456,6 +553,39 @@ def select_state():
     return id_data
 
 
+"""
+Algoritmo main()
+Imprimir "BIENVENIDO AL SISTEMA DE CONSULTA DE DATOS DE COVID-19 EN MEXICO\n"
+Imprimir "POR FAVOR SELECCIONE UNA OPCION\n"
+Imprimir "1. Leer el archivo con datos"
+Imprimir "2. Acceder a datos nacionales"
+Imprimir "3. Acceder a datos por estado"
+Imprimir "4. Salir"
+Leer op (operacion)
+Inicializar escape como Falso
+Obtener el valor global de FILE_LOADED
+Si op es 2 o 3, y FILE_LOADED es falso
+    Entonces imprimir "Error: no se ha leido el archivo"
+Sino, si op es 1
+    Imprimir "Por favor ingrese el nombre del archivo con datos"
+    Leer name
+    Llamar a read_file(name)
+Sino, si op es 2
+    Llamar a national_data()
+Sino, si op es 3
+    Guardar en id_data el valor que retorna select_state()
+    Llamar a state_data(id_data)
+Sino, si op es 4
+    Asignar True al valor de escape
+Sino
+    Imprimir "Operacion no reconocida"
+Si escape es Falso
+    Imprimir "Presione una tecla para continuar"
+    Leer una cadena y no guardar en ningun lado
+    Hacer una llamada recursiva a main
+"""
+
+
 def main():
     """
     main() es la interfaz de usuario principal que comunica al usuario con
@@ -466,20 +596,18 @@ def main():
     None.
 
     """
-    os.system("cls")
     print("BIENVENIDO AL SISTEMA DE CONSULTA DE DATOS DE COVID-19 EN MEXICO\n")
     print("POR FAVOR SELECCIONE UNA OPCION\n")
     print("1. Leer el archivo con datos")
     print("2. Acceder a datos nacionales")
     print("3. Acceder a datos por estado")
     print("4. Salir")
-    os.system("pause")
     op = input()
-    Escape = False
-    global __file_loaded
-    if((op == '2' or op == '3') and not __file_loaded):
-        print("""Error: no se puede acceder a esa funcion 
-              porque no se ha leido el archivo""")
+    escape = False
+    global FILE_LOADED
+    if((op == '2' or op == '3') and not FILE_LOADED):
+        print("Error: no se puede acceder a esa funcion " +
+              "porque no se ha leido el archivo")
     elif(op == '1'):
         print("Por favor ingrese el nombre del archivo con datos")
         name = input()
@@ -490,10 +618,10 @@ def main():
         id_data = select_state()
         state_data(id_data)
     elif(op == '4'):
-        Escape = True
+        escape = True
     else:
         print("Operacion no reconocida")
-    if(not Escape):
+    if(not escape):
         print("Presione una tecla para continuar")
         input()
         main()
