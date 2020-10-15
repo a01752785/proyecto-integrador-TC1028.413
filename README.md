@@ -1,10 +1,20 @@
-# proyecto-integrador-TC1028.413
-Proyecto de Análisis de Datos COVID-19
-Características de la aplicación
-1.	Leer el archivo con datos y guardarlo en listas
-2.	Mostrar grafica de casos diarios con total nacional
-3.	Mostrar grafica de casos acumulados con total nacional
-4.	Mostrar grafica de porcentaje de avance diario nivel nacional
-5.	Mostrar grafica de casos diarios por estado
-6.	Mostrar grafica de casos acumulados por estado
-7.	Mostrar grafica de pastel de porcentaje del total en cada estado
+# TC1028
+
+# Proyecto Integrador: Análisis de Datos
+
+En este repositorio podrás guardar los archivos que conforman tu proyecto integrador en Python.
+
+Recuerda que también deberas subir en Canvas (eLumen) un **archivo zip**  con todos los archivos que involucren tu proyecto.
+
+Tu proyecto debe de cumplir con los estándares mínimos en el documento *Convenciones de estilo en Python* que se encuentra en el repositorio , así como el uso de **docstrings** en tus métodos .
+
+Además del código fuente deberás entregar un ***reporte del proyecto integrador*** , este deberá contener:
+
+- Explicación del proyecto integrador y su importancia en nuestra vida.
+- Algoritmo (imagen de code2flow) de tu **método main** que nos indica la estructura de tu programa.
+- Capturas de pantalla que muestren la ejecución del programa.
+
+A continuación es la lista de cotejo que se utilizará para obtener la calificación del proyecto y como se evaluarán las subcompetencias que se han usado durante el curso.
+
+
+![ListaCotejo](ListaCotejo.png)
